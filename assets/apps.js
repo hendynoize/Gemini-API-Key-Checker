@@ -104,4 +104,4 @@ function injectAdImage(imgUrl) {
     adsBox.appendChild(img);
 }
 
-injectAdImage("saweria.png");
+injectAdImage("https://gkey.pages.dev/assets/saweria.png");
