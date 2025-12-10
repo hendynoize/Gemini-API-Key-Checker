@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Gemini API Key Checker — Periksa Validitas API Key Gemini</title>
+<meta name="description" content="Periksa validitas banyak API key Gemini dengan cepat. Antarmuka sederhana, hasil langsung terlihat">
+<meta name="keywords" content="Gemini API, API key checker, cek API key, Gemini key, generator, validator">
+<meta name="author" content="Hendy Black">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://gach.pages.dev">
+
+<!-- Mobile -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Open Graph (Facebook, WhatsApp, etc.) -->
+<meta property="og:title" content="Bulk Gemini API Key Checker — Periksa Validitas API Key Gemini">
+<meta property="og:description" content="Periksa validitas multiple API key Gemini dengan cepat">
+<meta property="og:type" content="software">
+<meta property="og:url" content="https://example.com/gemini-api-key-checker">
+<meta property="og:image" content="https://example.com/assets/og-image.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bulk Gemini API Key Checker">
+<meta name="twitter:description" content="Periksa validitas multiple API key Gemini dengan cepat.">
+<meta name="twitter:image" content="https://example.com/assets/og-image.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-section {
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e1e5e9;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .results-section {
+            margin-bottom: 30px;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border-left: 5px solid #ddd;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .result-item.valid {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+
+        .result-item.invalid {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .result-item.limit {
+            border-left-color: #ffc107;
+            background: #fff3cd;
+        }
+
+        .result-key {
+            font-family: monospace;
+            font-size: 12px;
+            color: #333;
+            flex: 1;
+            word-break: break-all;
+        }
+
+        .result-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-valid {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-invalid {
+            background: #dc3545;
+            color: white;
+        }
+
+        .status-limit {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .summary-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .summary-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .summary-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .export-section {
+            text-align: center;
+        }
+
+        .export-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4facfe;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #bee5eb;
+        }
+.half-wrap {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.left-side {
+    width: 55%;
+
+}
+.right-side {
+    width: 45%;
+
+}
+
+.ads-box {
+    background: #f1f3f5;
+    border: 2px dashed #bbb;
+    border-radius: 10px;
+    padding: 20px;
+    min-height: 150px;
+    color: #555;
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .half-wrap {
+        flex-direction: column;
+    }
+    .left-side,
+    .right-side {
+        width: 100%;
+    }
+}
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-key"></i> Bulk Gemini API Key Checker</h1>
+            <p>Periksa validitas multiple API key Gemini dengan mudah dan cepat</p>
+        </div>
+        
+        <div class="content">
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <strong>Info:</strong> Masukkan API key Gemini yang ingin diperiksa (satu per baris). 
+                Sistem tidak menyimpan log API key Anda
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="input-section">
+
+    <div class="half-wrap">
+        <!-- LEFT SIDE: INPUT KEYS -->
+        <div class="left-side">
+            <div class="input-group">
+                <label for="apiKeys"><i class="fas fa-list"></i> API Keys:</label>
+                <textarea id="apiKeys" placeholder="Masukkan API key Gemini di sini...
+Contoh:
+AIzaSyA...
+AIzaSyB..." spellcheck="false"></textarea>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: ADS -->
+        <div class="right-side">
+                    <label for="apiKeys"><i class="fas fa-hand-holding-heart"></i> Donate</label>
+            <div class="ads-box">
+
+                <!-- Placeholder ADS -->
+
+            </div>
+        </div>
+    </div>
+
+    <button class="btn" id="checkBtn" onclick="checkApiKeys()">
+        <i class="fas fa-play"></i>
+        <span id="btnText">Mulai Pengecekan</span>
+    </button>
+</div>
+
+                
+                
+                
+               
+<center><small>Made with 💜 by <a href="https://hendynoize.net/" target="_blank">Hendynoize</a></small></center>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Menyiapkan pengecekan...</p>
+            </div>
+
+            <div class="progress-section" id="progressSection">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Memeriksa: 0 dari 0</div>
+            </div>
+
+            <div class="summary-section" id="summarySection" style="display: none;">
+                <h3><i class="fas fa-chart-bar"></i> Ringkasan Hasil</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-number" id="totalKeys">0</div>
+                        <div class="summary-label">Total Keys</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-number" id="validKeys">0</div>
+                        <div class="summary-label">Valid</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-number" id="invalidKeys">0</div>
+                        <div class="summary-label">Invalid</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-number" id="limitKeys">0</div>
+                        <div class="summary-label">Limit</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <h3><i class="fas fa-list-alt"></i> Hasil Pengecekan</h3>
+                <div id="resultsList"></div>
+            </div>
+
+            <div class="export-section" id="exportSection" style="display: none;">
+                <button class="export-btn" onclick="exportToTxt()">
+                    <i class="fas fa-download"></i> Export TXT
+                </button>
+                <button class="export-btn" onclick="exportToJson()">
+                    <i class="fas fa-code"></i> Export JSON
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/app.js"></script>
+</body>
+</html>
