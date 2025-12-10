@@ -104,5 +104,4 @@ function injectAdImage(imgUrl) {
     adsBox.appendChild(img);
 }
 
-// CONTOH PEMAKAIAN:
-injectAdImage("assets/saweria.png");
+injectAdImage("saweria.png");
