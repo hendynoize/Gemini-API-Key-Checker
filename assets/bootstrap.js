@@ -1,6 +1,3 @@
-/* =========================================================
-   Global Variables (Untuk keperluan Export)
-   ========================================================= */
 let allResults = [];
 
 /* =========================================================
@@ -11,73 +8,61 @@ function sleep(ms) {
 }
 
 /* =========================================================
-   Core Logic: Check Single Key
+   Core Logic: Check Single Key (perbaikan)
    ========================================================= */
 async function checkSingleKey(key) {
-  const url = `https://asblognlp.yoi.workers.dev/?keys=${key}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${encodeURIComponent(key)}`;
   const payload = {
-    contents: [{ parts: [{ text: "hi" }] }]
+    contents: [{ parts: [{ text: "ping" }] }]
   };
 
   let attempt = 1;
-  const maxAttempt = 3; // Dikurangi agar tidak terlalu lama menunggu
+  const maxAttempt = 3;
 
   while (attempt <= maxAttempt) {
-    /* Delay manusiawi (anti-spam pattern) */
-    if (attempt > 1) {
-        // Exponential backoff untuk retry
-        await sleep(attempt * 1000); 
-    } else {
-        await sleep(200 + Math.random() * 300);
-    }
+    // Delay sederhana
+    if (attempt > 1) await sleep(attempt * 1000);
+    else await sleep(200 + Math.random() * 300);
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000); // 10 detik timeout
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     try {
+      // NOTE: hanya satu field headers (duplicated headers removed)
       const res = await fetch(url, {
         method: "POST",
         signal: controller.signal,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) SafeCheck/1.0"
+        },
         body: JSON.stringify(payload)
       });
 
-      clearTimeout(timeout);
+      clearTimeout(timeoutId);
 
-      // === STATUS 200: VALID ===
-      if (res.status === 200) {
-        return "VALID";
-      }
+      console.log(`checkSingleKey: ${key} => HTTP ${res.status}`);
 
-      // === STATUS 429: RATE LIMIT / QUOTA ===
+      if (res.status === 200) return "VALID";
       if (res.status === 429) {
-        // Jika sudah attempt terakhir, return LIMIT
         if (attempt === maxAttempt) return "LIMIT";
-        console.warn(`Key ${key.substr(0,5)}... 429 detected, retrying...`);
         attempt++;
-        continue; 
+        continue;
       }
+      if (res.status === 400) return "INVALID";
+      if (res.status === 403) return "INVALID";
 
-      // === STATUS 400: INVALID KEY ===
-      // Biasanya 400 Bad Request dengan pesan "API key not valid"
-      if (res.status === 400) {
-        return "INVALID";
-      }
+      // fallback: coba baca body untuk diagnosa (opsional)
+      try {
+        const text = await res.text();
+        console.log("Response body:", text.slice(0, 200));
+      } catch (e) {}
 
-      // === STATUS 403: PERMISSION / QUOTA ===
-      // Kadang 403 juga berarti quota habis (tergantung respons body), 
-      // tapi untuk aman kita anggap Invalid/Permission denied kecuali pesannya jelas.
-      if (res.status === 403) {
-        return "INVALID";
-      }
-
-      // Status lain anggap Invalid sementara
       return "INVALID";
-
     } catch (err) {
-      clearTimeout(timeout);
-      // Jika network error/timeout, coba retry
-      if (attempt === maxAttempt) return "ERROR"; // "ERROR" bisa dianggap Invalid di UI
+      clearTimeout(timeoutId);
+      console.warn(`checkSingleKey error for ${key} (attempt ${attempt}):`, err && err.name ? err.name : err);
+      if (attempt === maxAttempt) return "ERROR";
       attempt++;
     }
   }
@@ -86,7 +71,7 @@ async function checkSingleKey(key) {
 }
 
 /* =========================================================
-   Main Function: Bulk Checker
+   Main Function: Bulk Checker (perbaikan)
    ========================================================= */
 async function checkApiKeys() {
   const apiKeysInput = document.getElementById("apiKeys").value.trim();
@@ -95,11 +80,13 @@ async function checkApiKeys() {
   const checkBtn = document.getElementById("checkBtn");
   const btnText = document.getElementById("btnText");
   const exportSection = document.getElementById("exportSection");
+  const summaryList = document.getElementById("summaryList");
 
   // Reset UI
   errorBox.style.display = "none";
   tbody.innerHTML = "";
-  allResults = []; // Reset data export
+  summaryList.innerHTML = "";
+  allResults = [];
   exportSection.style.display = "none";
 
   if (!apiKeysInput) {
@@ -109,27 +96,32 @@ async function checkApiKeys() {
   }
 
   const keys = apiKeysInput.split("\n").map(k => k.trim()).filter(k => k);
-
-  if (keys.length === 0) return;
+  if (keys.length === 0) {
+    errorBox.innerText = "Tidak ada key yang valid pada input.";
+    errorBox.style.display = "block";
+    return;
+  }
 
   // UI State: Loading
   checkBtn.disabled = true;
   btnText.innerText = "Sedang Memeriksa...";
   document.getElementById("progressSection").style.display = "block";
   document.getElementById("summarySection").style.display = "block";
-  document.getElementById("resultsSection").style.display = "block";
+  // pastikan resultsSection terlihat (ambil by id pertama)
+  const resultsSection = document.querySelector("#resultsSection");
+  if (resultsSection) resultsSection.style.display = "block";
 
   let valid = 0, invalid = 0, limit = 0;
   document.getElementById("totalKeys").innerText = keys.length;
 
+  console.log("Starting check for", keys.length, "keys");
+
   // === LOOPING UTAMA ===
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
-    
     // Panggil fungsi pengecekan
     let status = await checkSingleKey(key);
-    
-    // Normalisasi status jika return "ERROR" network
+
     if (status === "ERROR") status = "INVALID";
 
     // Simpan ke array global untuk export
@@ -154,28 +146,36 @@ async function checkApiKeys() {
 
     const tdKey = document.createElement("td");
     tdKey.style.fontFamily = "monospace";
-    // Masking key agar tidak tampil penuh (opsional, hapus .substring jika ingin full)
-    tdKey.textContent = key.substring(0, 10) + "****************"; 
-    tdKey.title = key; // Tooltip show full key
+    tdKey.textContent = key.length > 20 ? key.substring(0, 10) + "****************" : key;
+    tdKey.title = key;
 
     const tdStat = document.createElement("td");
-    
-    // Styling badge status
+
     let badgeClass = "status-invalid";
     if (status === "VALID") badgeClass = "status-valid";
     if (status === "LIMIT") badgeClass = "status-limit";
-    
+
     tdStat.innerHTML = `<span class="result-status ${badgeClass}">${status}</span>`;
 
     tr.appendChild(tdKey);
     tr.appendChild(tdStat);
     tbody.appendChild(tr);
-  }
 
-  // UI State: Selesai
+    // === UPDATE SUMMARY LIST (DALAM LOOP) ===
+    let cls = "sum-invalid";
+    if (status === "VALID") cls = "sum-valid";
+    if (status === "LIMIT") cls = "sum-limit";
+
+    summaryList.innerHTML += `
+      <div>${key} : <span class="${cls}">${status}</span></div>
+    `;
+  } // end for
+
+  // === UI State: Selesai (DI LUAR LOOP) ===
   checkBtn.disabled = false;
   btnText.innerText = "Mulai Pengecekan";
-  exportSection.style.display = "block"; // Munculkan tombol export
+  exportSection.style.display = "block";
+  console.log("Pengecekan selesai, hasil:", allResults);
   alert("Pengecekan Selesai!");
 }
 
