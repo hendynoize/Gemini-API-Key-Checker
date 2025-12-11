@@ -143,10 +143,25 @@ input[type="checkbox"]:checked::after {
     font-size: 14px;
     font-weight: bold;
 }
-#progressSection,#summarySection,#resultsSection{margin-top:15px}
-    .result-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #ddd}
-    .status-valid{color:green}.status-invalid{color:red}.status-limit{color:orange}
-    #progressFill{height:18px;background:#4caf50;width:0%;transition:width .3s}
+table.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 14px;
+  }
+  table.result-table th,
+  table.result-table td {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+  table.result-table th {
+    background: #f2f2f2;
+  }
+  td.status-valid   { color: #2e7d32; font-weight: 600; }
+  td.status-invalid { color: #c62828; font-weight: 600; }
+  td.status-limit   { color: #ef6c00; font-weight: 600; }
+  .mono { font-family: monospace; font-size: 13px; }
 /* Responsive improvements */
 @media (max-width: 480px) {
     .container {
