@@ -143,7 +143,10 @@ input[type="checkbox"]:checked::after {
     font-size: 14px;
     font-weight: bold;
 }
-
+#progressSection,#summarySection,#resultsSection{margin-top:15px}
+    .result-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #ddd}
+    .status-valid{color:green}.status-invalid{color:red}.status-limit{color:orange}
+    #progressFill{height:18px;background:#4caf50;width:0%;transition:width .3s}
 /* Responsive improvements */
 @media (max-width: 480px) {
     .container {
