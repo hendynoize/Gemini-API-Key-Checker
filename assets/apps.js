@@ -14,7 +14,6 @@ async function checkApiKeys() {
 
     const keys = apiKeysInput.split("\n").map(k => k.trim()).filter(k => k !== "");
 
-    // tampilkan UI progres
     document.getElementById("progressSection").style.display = "block";
     document.getElementById("summarySection").style.display = "block";
     document.getElementById("resultsSection").style.display = "block";
@@ -27,7 +26,6 @@ async function checkApiKeys() {
         const key = keys[i];
         const status = await checkSingleKey(key);
 
-        // update UI ringkasan
         if (status === "VALID") valid++;
         else if (status === "LIMIT") limit++;
         else invalid++;
@@ -36,51 +34,18 @@ async function checkApiKeys() {
         document.getElementById("invalidKeys").innerText = invalid;
         document.getElementById("limitKeys").innerText = limit;
 
-        // progress bar
-        let progress = ((i + 1) / keys.length) * 100;
+        const progress = ((i + 1) / keys.length) * 100;
         document.getElementById("progressFill").style.width = progress + "%";
         document.getElementById("progressText").innerText =
             `Memeriksa: ${i + 1} dari ${keys.length}`;
 
-        // tampilkan hasil
         addResultToUI(key, status);
+
+        // === Anti spam random delay 300–1200ms ===
+        await new Promise(r => setTimeout(r, 300 + Math.random() * 900));
     }
 }
 
-async function checkSingleKey(key) {
-    const url =
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent";
-
-    try {
-        const response = await fetch(url + "?key=" + key, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{ text: "ping" }]
-                }]
-            })
-        });
-
-        if (response.status === 200) return "VALID";
-        if (response.status === 429) return "LIMIT";
-
-        return "INVALID";
-
-    } catch (e) {
-        return "INVALID";
-    }
-}
-
-function addResultToUI(key, status) {
-    const list = document.getElementById("resultsList");
-
-    const div = document.createElement("div");
-    div.classList.add("result-item");
-
-    if (status === "VALID") div.classList.add("valid");
-    else if (status === "LIMIT") div.classList.add("limit");
-    else div.classList.add("invalid");
 
     div.innerHTML = `
         <span class="result-key">${key}</span>
