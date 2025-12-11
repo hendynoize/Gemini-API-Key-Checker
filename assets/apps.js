@@ -71,3 +71,14 @@ async function checkApiKeys(){
     await new Promise(r=>setTimeout(r, 300 + Math.random()*900));
   }
 }
+const ads = document.querySelector(".ads-box");
+ads.innerHTML = ""; // bersihkan dulu
+
+const img = document.createElement("img");
+img.src = "https://gkey.pages.dev/assets/saweria.png";
+img.alt = "Ads";
+img.style.maxWidth = "100%";
+img.style.borderRadius = "8px";
+img.style.display = "block";
+
+ads.appendChild(img);
