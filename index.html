@@ -25,14 +25,6 @@
 <meta name="twitter:title" content="Bulk Gemini API Key Checker">
 <meta name="twitter:description" content="Periksa validitas multiple API key Gemini dengan cepat.">
 <meta name="twitter:image" content="https://example.com/assets/og-image.png">
-<link rel="icon" type="image/x-icon" href="https://gkey.pages.dev/assets/gkey-32.png" />
-<link rel="apple-touch-icon" href="https://gkey.pages.dev/assets/gkey-512.png">
-<link rel="apple-touch-icon" sizes="152x152" href="https://gkey.pages.dev/assets/gkey-128.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://gkey.pages.dev/assets/gkey-256.png">
-<link rel="apple-touch-icon" sizes="167x167" href="https://gkey.pages.dev/assets/gkey-128.png">
-<link rel="icon" sizes="192x192" href="" />
-<link rel="icon" sizes="128x128" href="" />
-   
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -418,6 +410,9 @@
 .ads-box {
     flex-direction: column !important;
 }
+.sum-valid { color:#0d7c28; font-weight:600; }
+.sum-invalid { color:#b00020; font-weight:600; }
+.sum-limit { color:#b06a00; font-weight:600; }
 /* Mobile responsive */
 @media (max-width: 768px) {
     .half-wrap {
@@ -536,6 +531,7 @@ AIzaSyB..." spellcheck="false"></textarea>
 </div>
 
 
+
             <div class="results-section" id="resultsSection" style="display: none;">
 
                <div id="resultsSection" style="display:none">
@@ -551,7 +547,7 @@ AIzaSyB..." spellcheck="false"></textarea>
   </table>
 </div>
             </div>
-
+<div id="summaryList" style="margin-top:15px; font-family:monospace; font-size:13px; line-height:1.6;"></div>
             <div class="export-section" id="exportSection" style="display: none;">
                 <button class="export-btn" onclick="exportToTxt()">
                     <i class="fas fa-download"></i> Export TXT
