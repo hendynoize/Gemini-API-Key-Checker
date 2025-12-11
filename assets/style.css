@@ -143,25 +143,94 @@ input[type="checkbox"]:checked::after {
     font-size: 14px;
     font-weight: bold;
 }
-table.result-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 8px;
-    font-size: 14px;
+/* ====== WRAPPER TABLE ====== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 15px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+/* ====== TABLE ====== */
+#resultsTable,
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+/* ====== HEADER ====== */
+table thead tr {
+  background: #f7f7f7;
+  border-bottom: 2px solid #dcdcdc;
+}
+
+table thead th {
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ====== BODY ====== */
+table tbody tr {
+  border-bottom: 1px solid #e8e8e8;
+  transition: background 0.15s ease;
+}
+
+table tbody tr:hover {
+  background: #f2faff;
+}
+
+table td {
+  padding: 10px;
+}
+
+/* ====== MONOSPACE KEY ====== */
+.mono {
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 13px;
+  color: #444;
+  word-break: break-all;
+}
+
+/* ====== STATUS COLORS ====== */
+.status-valid {
+  padding: 5px 10px;
+  font-weight: 600;
+  color: #0d7c28;
+  background: #d2f8d9;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.status-invalid {
+  padding: 5px 10px;
+  font-weight: 600;
+  color: #b00020;
+  background: #ffe2e5;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.status-limit {
+  padding: 5px 10px;
+  font-weight: 600;
+  color: #b06a00;
+  background: #ffefcc;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 500px) {
+  table td, table th {
+    padding: 8px;
+    font-size: 13px;
   }
-  table.result-table th,
-  table.result-table td {
-    padding: 6px 8px;
-    border: 1px solid #ccc;
-    text-align: left;
-  }
-  table.result-table th {
-    background: #f2f2f2;
-  }
-  td.status-valid   { color: #2e7d32; font-weight: 600; }
-  td.status-invalid { color: #c62828; font-weight: 600; }
-  td.status-limit   { color: #ef6c00; font-weight: 600; }
-  .mono { font-family: monospace; font-size: 13px; }
+}
+
 /* Responsive improvements */
 @media (max-width: 480px) {
     .container {
